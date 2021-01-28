@@ -1,0 +1,653 @@
+// ***************************** AnyMoCap ***********************************
+#include "../../../libdef.any"
+
+// Enter and edit data/settings shared by all subjects and trials
+#path MOCAP_LAB_SPECIFIC_DATA "../../../LabSpecificData.any"
+
+
+// Enter and edit data shared by all trials from this subject
+#path MOCAP_SUBJECT_SPECIFIC_DATA "../SubjectSpecificData.any"
+
+
+// Enter and edit data specific to this trial:
+#path MOCAP_TRIAL_SPECIFIC_DATA "TrialSpecificData.any"
+
+// Include the AnyMoCap Framwork
+#include "<ANYMOCAP_MODEL>"
+
+Main={
+  AnyFolder &InverseStudy = Main.Studies.InverseDynamicStudy ;
+  
+  InverseStudy={
+    //make a force in right hand
+    AnyForce3D RightHandForce ={
+      AnyRefFrame &ref=Main.HumanModel.BodyModel.Right.ShoulderArm.Seg.Hand.Ref.PalmJoint;
+      F={0,-30,0};  //apply 30 newtons downwards in y direction
+    };
+    
+    //make the hand force visual
+    AnyDrawVector DrawRightHandForce ={
+      AnyRefFrame &ref=Main.HumanModel.BodyModel.Right.ShoulderArm.Seg.Hand.Ref.PalmJoint;
+      Vec=0.01*.RightHandForce.F;
+      Line.Thickness=0.02;
+      Line.RGB={0,0,1};
+    };
+    
+    AnyForce3D LeftHandForce ={
+      AnyRefFrame &ref=Main.HumanModel.BodyModel.Left.ShoulderArm.Seg.Hand.Ref.PalmJoint;
+      F={0,-30,0};
+    };
+    
+    AnyDrawVector DrawLeftHandForce ={
+      AnyRefFrame &ref=Main.HumanModel.BodyModel.Left.ShoulderArm.Seg.Hand.Ref.PalmJoint;
+      Vec=0.01*.LeftHandForce.F;
+      Line.Thickness=0.02;
+      Line.RGB={0,0,1};
+    };
+    
+    
+    //Variables:
+    //Set the exo dimensions according to each individual's anthropometry
+    
+    AnyVar Width= Main.HumanModel.BodyModel.Trunk.SegmentsLumbar.PelvisSeg.Right.HipJoint.sRel[2]*4;
+    
+    AnyVar UpperLength= Main.HumanModel.Anthropometrics.SegmentDimensions.TrunkHeight*0.7;
+
+    AnyVar LowerLength=Main.HumanModel.Anthropometrics.SegmentDimensions.Right.ThighLength*0.7;
+   
+    AnyVar TrunkDepth=Main.HumanModel.Anthropometrics.SegmentDimensions.TrunkDepth;
+
+   
+
+    
+
+    AnySeg UpperSeg ={
+
+      r0=Main.HumanModel.BodyModel.Trunk.SegmentsLumbar.PelvisSeg.r0;
+
+      Mass=0;
+
+      Jii={0,0,0};
+
+     
+
+      AnyRefNode HipMidPoint= { 
+
+        sRel={0,0,0};
+
+        AnyDrawRefFrame drw ={};
+
+      };
+
+     
+
+      AnyRefNode HipRightPoint= { 
+
+        sRel={-0.5*..Width,0,0};
+
+        AnyDrawRefFrame drw ={};
+
+      };
+
+     
+
+      AnyRefNode HipLeftPoint= { 
+
+        sRel={0.5*..Width,0,0};
+
+        AnyDrawRefFrame drw ={};
+
+      };
+
+     
+
+      
+
+      AnyRefNode ChestRightPoint= { 
+
+        sRel={-0.5*..Width,..UpperLength,0};
+
+        AnyDrawRefFrame drw ={};
+
+      };
+
+     
+
+      AnyRefNode ChestLeftPoint= { 
+
+        sRel={0.5*..Width,..UpperLength,0};
+
+        AnyDrawRefFrame drw ={};
+
+      };
+
+     
+
+      AnyRefNode ChestCenterPoint= { 
+
+        sRel={0,..UpperLength,0};
+
+        AnyDrawRefFrame drw ={};
+
+      };
+
+     
+
+      
+
+      AnyDrawPLine drw ={Thickness=.005; RGB={0,0,1};};
+
+    };
+
+   
+
+    AnyKinPLine UpperSegVisualLine ={
+
+      AnyRefFrame &ref1=.UpperSeg.HipMidPoint;
+
+      AnyRefFrame &ref2=.UpperSeg.HipRightPoint;
+
+      AnyRefFrame &ref3=.UpperSeg.ChestRightPoint;
+
+      AnyRefFrame &ref4=.UpperSeg.ChestLeftPoint;
+
+      AnyRefFrame &ref5=.UpperSeg.HipLeftPoint;
+
+      AnyRefFrame &ref6=.UpperSeg.HipMidPoint;
+
+     
+
+      AnyDrawPLine drw ={Thickness=0.01;RGB={0,0,1};};
+
+    };
+
+   
+
+    
+
+    AnySeg LowerSegRight ={
+
+      r0=Main.HumanModel.BodyModel.Trunk.SegmentsLumbar.PelvisSeg.r0;
+
+      Axes0=RotMat(10*pi/180,x);
+
+      Mass=0;
+
+      Jii={0,0,0};
+
+     
+
+      AnyRefNode HipMidPoint= { 
+
+        sRel={0,0,0};
+
+        AnyDrawRefFrame drw ={};
+
+      };
+
+     
+
+      AnyRefNode HipRightPoint= { 
+
+        sRel={-0.5*..Width,0,0};
+
+        AnyDrawRefFrame drw ={};
+
+      };
+
+     
+
+      
+
+      
+
+      AnyRefNode ThighRightPoint= { 
+
+        sRel={-0.5*..Width,-..LowerLength,0};
+
+        AnyDrawRefFrame drw ={};
+
+      };
+
+      AnyDrawPLine drw ={Thickness=.005; RGB={0,0,1};};
+
+     
+
+    };
+
+   
+
+    
+
+    
+
+    AnyKinPLine LowerSegRightVisualLine ={
+
+      AnyRefFrame &ref1=.LowerSegRight.HipMidPoint;
+
+      AnyRefFrame &ref2=.LowerSegRight.HipRightPoint;
+
+      AnyRefFrame &ref3=.LowerSegRight.ThighRightPoint;
+
+      AnyDrawPLine drw ={Thickness=0.01;RGB={0,0,1};};
+
+    };
+
+   
+
+    
+
+    AnySeg LowerSegLeft ={
+
+      r0=Main.HumanModel.BodyModel.Trunk.SegmentsLumbar.PelvisSeg.r0;
+
+      Axes0=RotMat(10*pi/180,x);
+
+     
+
+      
+
+      Mass=0;
+
+      Jii={0,0,0};
+
+     
+
+      AnyRefNode HipMidPoint= { 
+
+        sRel={0,0,0};
+
+        AnyDrawRefFrame drw ={};
+
+      };
+
+     
+
+      AnyRefNode HipLeftPoint= { 
+
+        sRel={0.5*..Width,0,0};
+
+        AnyDrawRefFrame drw ={};
+
+      };
+
+     
+
+      
+
+      
+
+      AnyRefNode ThighLeftPoint= { 
+
+        sRel={0.5*..Width,-..LowerLength,0};
+
+        AnyDrawRefFrame drw ={};
+
+      };
+
+     
+
+      
+
+    };
+
+   
+
+    
+
+    AnyKinPLine LowerSegLeftVisualLine ={
+
+      AnyRefFrame &ref1=.LowerSegLeft.HipMidPoint;
+
+      AnyRefFrame &ref2=.LowerSegLeft.HipLeftPoint;
+
+      AnyRefFrame &ref3=.LowerSegLeft.ThighLeftPoint;
+
+      AnyDrawPLine drw ={Thickness=0.01;RGB={0,0,1};};
+
+    };
+
+   
+
+    AnyRevoluteJoint JntRight ={
+
+      AnyRefNode &ref1=.UpperSeg.HipRightPoint;
+
+      AnyRefNode &ref2=.LowerSegRight.HipRightPoint;
+
+      Axis=x;
+
+    };
+
+   
+
+    AnyRevoluteJoint JntLeft ={
+
+      AnyRefNode &ref1=.UpperSeg.HipLeftPoint;
+
+      AnyRefNode &ref2=.LowerSegLeft.HipLeftPoint;
+
+      Axis=x;
+
+    };
+
+   
+
+    
+
+    
+
+    //add point on thighs
+
+    
+
+    AnyFolder &ThighR =Main.HumanModel.BodyModel.Right.Leg.Seg.Thigh;
+
+    ThighR ={
+
+      AnyRefNode MyContactPoint ={
+
+        sRel ={0,0,0};
+
+        AnyDrawRefFrame drw ={};
+
+      };
+
+     
+
+    };
+
+   
+
+    AnyFolder &ThighL =Main.HumanModel.BodyModel.Left.Leg.Seg.Thigh;
+
+    ThighL ={
+
+      AnyRefNode MyContactPoint ={
+
+        sRel ={0,0,0};
+
+        AnyDrawRefFrame drw ={};
+
+      };
+
+     
+
+    };
+
+   
+
+    
+
+    
+
+    
+
+    
+
+    //constraints to right thigh   
+
+    AnyKinLinear RightThighMeasure ={
+
+      Ref=0;
+
+      AnyRefNode &ref1=.LowerSegRight.ThighRightPoint;
+
+      AnyRefNode &ref2=Main.HumanModel.BodyModel.Right.Leg.Seg.Thigh.MyContactPoint;
+
+    };
+
+   
+
+    AnyKinMeasureOrg RightThighMeasureZ ={
+
+      AnyKinLinear &ref=.RightThighMeasure;
+
+      MeasureOrganizer={2};
+
+    };
+
+   
+
+    //one constraint
+
+    AnyKinEqSimpleDriver RightThighMeasureZ_drv ={
+
+      AnyKinMeasureOrg &ref=. RightThighMeasureZ;
+
+      DriverPos={-0.1};
+
+      DriverVel={0};
+
+    };
+
+   
+
+    
+
+    AnyKinLinear LeftThighMeasure ={
+
+      Ref=0;
+
+      AnyRefNode &ref1=.LowerSegLeft.ThighLeftPoint;
+
+      AnyRefNode &ref2=Main.HumanModel.BodyModel.Left.Leg.Seg.Thigh.MyContactPoint;
+
+    };
+
+   
+
+    AnyKinMeasureOrg LeftThighMeasureZ ={
+
+      AnyKinLinear &ref=.LeftThighMeasure;
+
+      MeasureOrganizer={2};
+
+    };
+
+   
+
+    //one constraint
+
+    AnyKinEqSimpleDriver LeftThighMeasureZ_drv ={
+
+      AnyKinMeasureOrg &ref=. LeftThighMeasureZ;
+
+      DriverPos={-0.1};
+
+      DriverVel={0};
+
+    };
+
+   
+
+    
+
+    //Constraints on right hip y z
+
+    AnyKinLinear RightHipMeasure ={
+
+      Ref=0;
+
+      AnyRefNode &ref1=.UpperSeg.HipRightPoint;
+
+      AnyRefNode &ref2=Main.HumanModel.BodyModel.Trunk.SegmentsLumbar.PelvisSeg.Right.HipJoint;
+
+    };
+
+   
+
+    AnyKinMeasureOrg RightHipMeasureYZ ={
+
+      AnyKinLinear &ref=.RightHipMeasure;
+
+      MeasureOrganizer={1,2};
+
+    };
+
+   
+
+    //two constraint
+
+    AnyKinEqSimpleDriver RightHipMeasureYZ_drv ={
+
+      AnyKinMeasureOrg &ref=. RightHipMeasureYZ;
+
+      DriverPos={0,0};
+
+      DriverVel={0,0};
+
+    };
+
+   
+
+    
+
+    
+
+    //Constraints on left hip y z
+
+    AnyKinLinear LeftHipMeasure ={
+
+      Ref=0;
+
+      AnyRefNode &ref1=.UpperSeg.HipLeftPoint;
+
+      AnyRefNode &ref2=Main.HumanModel.BodyModel.Trunk.SegmentsLumbar.PelvisSeg.Left.HipJoint;
+
+    };
+
+   
+
+    AnyKinMeasureOrg LeftHipMeasureYZ ={
+
+      AnyKinLinear &ref=.LeftHipMeasure;
+
+      MeasureOrganizer={1,2};
+
+    };
+
+   
+
+    //two constraint
+
+    AnyKinEqSimpleDriver LeftHipMeasureYZ_drv ={
+
+      AnyKinMeasureOrg &ref=. LeftHipMeasureYZ;
+
+      DriverPos={0,0};
+
+      DriverVel={0,0};
+
+    };
+
+   
+
+    
+
+    
+
+    
+
+    
+
+    //Constraints on right pelvis center x
+
+    AnyKinLinear HipCenterMeasure ={
+
+      Ref=0;
+
+      AnyRefNode &ref1=.UpperSeg.HipMidPoint;
+
+      AnySeg &ref2=Main.HumanModel.BodyModel.Trunk.SegmentsLumbar.PelvisSeg;
+
+    };
+
+   
+
+    AnyKinMeasureOrg HipCenterMeasureX ={
+
+      AnyKinLinear &ref=.HipCenterMeasure;
+
+      MeasureOrganizer={0};
+
+    };
+
+   
+
+    //one constraint
+
+    AnyKinEqSimpleDriver HipCenterMeasureX_drv ={
+
+      AnyKinMeasureOrg &ref=. HipCenterMeasureX;
+
+      DriverPos={0};
+
+      DriverVel={0};
+
+    };
+
+   
+
+    
+
+    //Constraints on Sternum
+
+    AnyKinLinear ChestCenterMeasure ={
+
+      Ref=0;
+
+      AnyRefNode &ref1=.UpperSeg.ChestCenterPoint;
+
+      AnyRefNode &ref2=Main.HumanModel.BodyModel.Trunk.SegmentsThorax.ThoraxSeg.ij;
+
+    };
+
+   
+
+    AnyKinMeasureOrg ChestCenterMeasureZ ={
+
+      AnyKinLinear &ref=.ChestCenterMeasure;
+
+      MeasureOrganizer={2};
+
+    };
+
+   
+
+    // one constraint
+
+    AnyKinEqSimpleDriver ChestCenterMeasureZ_drv ={
+
+      AnyKinMeasureOrg &ref=.ChestCenterMeasureZ;
+
+      DriverPos={-0.5*.TrunkDepth};
+
+      DriverVel={0};
+
+    };
+    
+    
+     
+     AnyFunInterpol Exo={ 
+      Type=ConstantValue;
+      T={0,1,2,3,4,5,6,7}; 
+      Data={{10,10,10,10,10,10,10,10}}; //torque
+      };
+    
+  AnyForce RightHipTorque ={
+    AnyKinMeasure &ref=.JntRight; // right exo joint
+// F={Main.HumanModel.BodyModel.Interface.Right.HipFlexion.Pos[0]};
+   F={.Exo(Main.Studies.InverseDynamicStudy.t)[0]};
+   };
+//    
+ AnyForce LeftHipTorque ={
+  AnyKinMeasure &ref=.JntLeft; // left exo joint Main.HumanModel.BodyModel.Interface.Left.HipFlexion
+ // F={Main.HumanModel.BodyModel.Interface.Left.HipFlexion.Pos[0]};
+  F={.Exo(Main.Studies.InverseDynamicStudy.t)[0]};
+ };   
+
+    
+    
+  };
+};
