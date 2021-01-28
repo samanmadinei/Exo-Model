@@ -22,4 +22,4 @@ An inertial motion capture system (MVN Awinda, Xsens Technologies B.V., the Neth
 
 The mechanical behavior of each BSE (i.e., torque vs. angle relationship) were measured in a calibration trial using a computerized isokinetic dynamometer (Humac Norm, CSMi, MA) equipped with a trunk module. The continuous passive motion (CPM) mode of the isokinetic test machine was operated at various speeds, while setting the BSE supports at different levels (instant low and instant high conditions for the BackX™ and low-cam and high-cam conditions for the Laevo™). CPM testing trials were conducted using a flexible mannequin with a hinge joint at the hip to mimic trunk flexion/extension. Ultimately, a torque profile was derived as a function of angular velocity and angular position to estimate the assistive torque provided by the BSEs at each angular position and lifting speed. 
 
-
+![Exo Torque Profile](https://github.com/samanmadinei/Exo-Model/blob/main/Exo%20Lifting/Exo-Torque-Profile.png)
