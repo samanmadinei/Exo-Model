@@ -16,7 +16,7 @@ AnyBody Modeling System > 7.3
 
 XSens Awinda > 2019
 
-# Implementationn
+# Implementation
 
 An inertial motion capture system (MVN Awinda, Xsens Technologies B.V., the Netherlands) was used to capture whole-body kinematics during a repetitive lifting task. Measured kinematics data were exported from Xsens MVN Studio and imported into the AnyBody Modeling System (AMS), in which a linked-segment model with 44 degrees of freedom WAS reconstructed [Larsen et al. 2020](https://doi.org/10.1007/s10439-019-02409-8). To match the linked-segment model with the musculoskeletal model, I utilized an established approach involving virtual markers, minimizing linear distances between the virtual markers and the musculoskeletal model. Muscle activations and internal reaction forces will then be computed through an inverse dynamic analysis (top-down approach) by minimizing muscle activation levels to solve the problem of kinetic redundancy (or, the muscle distribution problem) ([Ansersen et al. 2010](https://doi.org/10.1080/10255840903067080), [Damsgaard et al. 2007](https://doi.org/10.1016/j.simpat.2006.09.001)). Note that participant weight, height, and other anthropometric data (e.g., trunk length, shoulder width, hip width, arm span) were used to scale body segment masses and lengths in the AMS. A mechanical interface for each BSE were created in the AMS platform, consisting of a torso frame hinged to two leg frames at the hip joint. Kinematics of the torso and leg frames were constrained such that they follow the participant’s torso and hip motions, respectively.
 
